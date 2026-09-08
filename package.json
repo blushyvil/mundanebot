@@ -1,4 +1,5 @@
 {
+  "type": "commonjs",
   "name": "mundanebot",
   "version": "1.0.0",
   "description": "",
@@ -7,11 +8,13 @@
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "keywords": [],
-  "type": "commonjs",
   "dependencies": {
     "@hapi/boom": "^10.0.1",
     "baileys": "^7.0.0-rc14",
+    "brat-canvas": "^1.0.30",
+    "canvas": "^3.2.3",
     "pino": "^10.3.1",
-    "qrcode-terminal": "^0.12.0"
+    "qrcode-terminal": "^0.12.0",
+    "wa-sticker-formatter": "^4.4.4"
   }
 }

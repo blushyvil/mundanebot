@@ -3,6 +3,10 @@ const { useMultiFileAuthState, DisconnectReason } = require('baileys')
 const { Boom } = require('@hapi/boom')
 const pino = require('pino')
 const qrcode = require('qrcode-terminal')
+const { Sticker } = require('wa-sticker-formatter')
+const { downloadMediaMessage } = require('baileys')
+const { bratGen } = require('brat-canvas')
+const { bratVid } = require('brat-canvas/video')
 
 async function startbot() {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys')
@@ -44,7 +48,57 @@ async function startbot() {
 
         if (text.toLowerCase() === 'ping') {
             await sock.sendMessage(from, {text: 'pong!'})
+            return
         }
+
+        const caption = msg.message.imageMessage?.caption || ''
+        if (msg.message.imageMessage && caption.toLowerCase() === 'munsi') {
+            const buffer = await downloadMediaMessage(
+                msg,
+                'buffer',
+                {},
+                {
+                    logger: pino({ level: 'silent' }),
+                    reuploadRequest: sock.updateMediaMessage
+                }
+            )
+            const sticker = new Sticker(buffer, {
+                pack: 'mundαne',
+                author: '⠀ ⠀ ⠀❤︎',
+                quality: 70
+            })
+            const stickerBuffer = await sticker.toBuffer()
+            await sock.sendMessage(from, { sticker: stickerBuffer })
+        }
+
+        if (text.toLowerCase().startsWith('mbrat')) {
+            const bratText = text.slice(6)
+
+            const imageBuffer = await bratGen(bratText, {
+                C_BG: '#ffffff',
+            })
+             const sticker = new Sticker(imageBuffer, {
+                pack: 'mundαne',
+                author: '⠀ ⠀ ⠀❤︎',
+                quality: 70
+            })
+            const stickerBuffer = await sticker.toBuffer()
+            await sock.sendMessage(from, { sticker: stickerBuffer })
+        }
+
+        if (text.toLowerCase().startsWith('bratgif ')) {
+            const bratText = text.slice(8)
+            const videoBuffer = await bratVid(bratText, { outputFormat: 'gif' })
+
+            const sticker = new Sticker(videoBuffer, {
+             pack: 'mundαne',
+                author: '⠀ ⠀ ⠀❤︎',
+                quality: 70
+            })
+            const stickerBuffer = await sticker.toBuffer()
+            await sock.sendMessage(from, { sticker: stickerBuffer })
+        }
+        
     })
 }
 
