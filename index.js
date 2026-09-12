@@ -7,6 +7,8 @@ const { Sticker } = require('wa-sticker-formatter')
 const { downloadMediaMessage } = require('baileys')
 const { bratGen } = require('brat-canvas')
 const { bratVid } = require('brat-canvas/video')
+const packageJson = require('./package.json')
+const commands = ['ping', 'sticker', 'brat', 'bratgif']
 
 async function startbot() {
     const { state, saveCreds } = await useMultiFileAuthState('auth_info_baileys')
@@ -46,13 +48,26 @@ async function startbot() {
         const text = msg.message.conversation || msg.message.extendedTextMessage?.text || ''
         const from = msg.key.remoteJid
 
-        if (text.toLowerCase() === 'ping') {
-            await sock.sendMessage(from, {text: 'pong!'})
+        if (text.toLowerCase() === 'munp') {
+            const start = Date.now()
+            const latency = Date.now() - start
+
+            const infoText = `pong!\n\n`+
+            `latency: ${latency}ms\n`+
+            `commands: ${commands.length}\n`+
+            `version: ${packageJson.version}\n`+
+            `developer: @blushyvil`
+
+            await sock.sendMessage(from, { text: infoText })
             return
         }
 
-        const caption = msg.message.imageMessage?.caption || ''
-        if (msg.message.imageMessage && caption.toLowerCase() === 'munsi') {
+        const caption = msg.message.imageMessage?.caption
+        || msg.message.conversation
+        || msg.message.extendedTextMessage?.text
+        || ''
+
+        if (msg.message.imageMessage && caption.toLowerCase() === 'muns') {
             const buffer = await downloadMediaMessage(
                 msg,
                 'buffer',
@@ -68,11 +83,11 @@ async function startbot() {
                 quality: 70
             })
             const stickerBuffer = await sticker.toBuffer()
-            await sock.sendMessage(from, { sticker: stickerBuffer })
+            await sock.sendMessage(from, { sticker: stickerBuffer }, { quoted: msg })
         }
 
-        if (text.toLowerCase().startsWith('mbrat')) {
-            const bratText = text.slice(6)
+        if (text.toLowerCase().startsWith('munbrat ')) {
+            const bratText = text.slice(8)
 
             const imageBuffer = await bratGen(bratText, {
                 C_BG: '#ffffff',
@@ -83,11 +98,11 @@ async function startbot() {
                 quality: 70
             })
             const stickerBuffer = await sticker.toBuffer()
-            await sock.sendMessage(from, { sticker: stickerBuffer })
+            await sock.sendMessage(from, { sticker: stickerBuffer }, { quoted: msg })
         }
 
-        if (text.toLowerCase().startsWith('bratgif ')) {
-            const bratText = text.slice(8)
+        if (text.toLowerCase().startsWith('munbg ')) {
+            const bratText = text.slice(6)
             const videoBuffer = await bratVid(bratText, { outputFormat: 'gif' })
 
             const sticker = new Sticker(videoBuffer, {
@@ -96,7 +111,7 @@ async function startbot() {
                 quality: 70
             })
             const stickerBuffer = await sticker.toBuffer()
-            await sock.sendMessage(from, { sticker: stickerBuffer })
+            await sock.sendMessage(from, { sticker: stickerBuffer }, { quoted: msg })
         }
         
     })
