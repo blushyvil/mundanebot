@@ -1,5 +1,5 @@
-const makeWASocket = require('baileys').default
-const { useMultiFileAuthState, DisconnectReason } = require('baileys')
+const makeWASocket = require('@itsliaaa/baileys').default
+const { useMultiFileAuthState, DisconnectReason } = require('@itsliaaa/baileys')
 const { Boom } = require('@hapi/boom')
 const pino = require('pino')
 const qrcode = require('qrcode-terminal')

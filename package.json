@@ -11,7 +11,7 @@
   "dependencies": {
     "@ffmpeg-installer/ffmpeg": "^1.1.0",
     "@hapi/boom": "^10.0.1",
-    "baileys": "^7.0.0-rc14",
+    "@itsliaaa/baileys": "^0.3.18-final",
     "brat-canvas": "^1.0.30",
     "canvas": "^3.2.3",
     "fluent-ffmpeg": "^2.1.3",

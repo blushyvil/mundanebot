@@ -1,5 +1,5 @@
 const pino = require('pino')
-const { downloadMediaMessage } = require('baileys')
+const { downloadMediaMessage } = require('@itsliaaa/baileys')
 const { makeSticker } = require('../utils/sticker')
 
 module.exports = {
